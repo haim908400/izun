@@ -1,0 +1,24 @@
+name: Deploy watch app to Surge
+
+on:
+  push:
+    branches: [main]
+    paths: ['watch/**', '.github/workflows/deploy-watch.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Deploy to Surge
+        run: npx --yes surge ./watch izun-watch.surge.sh
+        env:
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
